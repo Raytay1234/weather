@@ -1,27 +1,29 @@
 import React, { useState } from "react";
 import SearchBar from "./components/SearchBar";
 import WeatherCard from "./components/WeatherCard";
+import Forecast from "./components/Forecast"; // ✅ Add this
 import ThemeToggle from "./components/ThemeToggle";
 import { useWeather } from "./hooks/useWeather";
 
 const App = () => {
-  const { weather, loading, error, fetchWeather } = useWeather();
+  const { weather, forecast, loading, error, fetchWeather } = useWeather(); // ✅ Include forecast
   const [darkMode, setDarkMode] = useState(false);
 
   const toggleTheme = () => {
-    setDarkMode(!darkMode);
+    setDarkMode((prev) => !prev);
     document.documentElement.classList.toggle("dark");
   };
 
   return (
     <div
-      className={`min-h-screen flex flex-col items-center justify-between px-4 py-6 transition-colors duration-500 ${darkMode ? "bg-gray-900 text-white" : "bg-blue-100 text-gray-900"
-        }`}
+      className={`min-h-screen flex flex-col items-center justify-between px-4 py-6 transition-colors duration-500 ${
+        darkMode ? "bg-gray-900 text-white" : "bg-blue-100 text-gray-900"
+      }`}
     >
-      {/* Theme toggle */}
+      {/* 🌗 Theme Toggle */}
       <ThemeToggle darkMode={darkMode} toggleTheme={toggleTheme} />
 
-      {/* Header */}
+      {/* 🌤 Header */}
       <header className="text-center mt-10">
         <h1 className="text-4xl font-extrabold mb-2">Weather App</h1>
         <p className="text-gray-600 dark:text-gray-400">
@@ -29,7 +31,7 @@ const App = () => {
         </p>
       </header>
 
-      {/* Main content */}
+      {/* 🔍 Search & Results */}
       <main className="flex flex-col items-center w-full max-w-lg mt-6">
         <SearchBar onSearch={fetchWeather} />
 
@@ -38,14 +40,18 @@ const App = () => {
             Loading weather data...
           </p>
         )}
+
         {error && <p className="mt-6 text-red-500">{error}</p>}
 
         {!loading && !error && weather && (
-          <WeatherCard data={weather} />
+          <>
+            <WeatherCard data={weather} />
+            <Forecast forecast={forecast} /> {/* ✅ Show 5-day forecast */}
+          </>
         )}
       </main>
 
-      {/* Footer */}
+      {/* ❤️ Footer */}
       <footer className="mt-12 text-sm text-gray-500 dark:text-gray-400">
         Built with ❤️ by Ryan
       </footer>
